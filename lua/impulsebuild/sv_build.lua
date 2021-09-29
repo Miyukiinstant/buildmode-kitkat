@@ -3,10 +3,13 @@ end
 hook.Add("PlayerSpawn", "ImpulseBuildPlayerSpawn", ImpulseBuildPlayerSpawn)
 
 function ImpulseBuildEntityTakeDamage(ent, dmg)
+    if(ply:InSafeZone())then
+        return true
+    end
     if(ent:GetNWBool("PVE"))then
         return
     end
-    if(ent:GetNWBool("BuildMode") || dmg:GetAttacker():GetNWBool("BuildMode") )then --|| ply:InSafeZone()
+    if(ent:GetNWBool("BuildMode") || dmg:GetAttacker():GetNWBool("BuildMode") || ply:InSafeZone())then --|| ply:InSafeZone()
         return true
     else
         return false
@@ -33,10 +36,13 @@ end
 hook.Add("PlayerSpawnedVehicle", "ImpulseBuildPlayerSpawnedVehicle", ImpulseBuildPlayerSpawnedVehicle)
 ]]
 function ImpulseBuildPlayerShouldTakeDamage(ply, attacker)
+    if(ply:InSafeZone())then
+        return false
+    end
     if(attacker:GetNWBool("PVE"))then
         return false
     end
-    if(ply:GetNWBool("BuildMode") || ply:HasGodMode() )then --|| ply:InSafeZone()
+    if(ply:GetNWBool("BuildMode") || ply:HasGodMode())then --|| ply:InSafeZone()
         return false
     else
         return true
