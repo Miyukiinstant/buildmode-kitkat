@@ -24,7 +24,7 @@ hook.Add("PlayerInitialSpawn", "ImpulseBuildPlayerInitialSpawn", ImpulseBuildPla
 
 function ImpulseBuildPlayerNoClip(ply, state)
     if(ply:GetNWBool("PVE"))then
-        return
+        return false
     end
         return ply:GetNWBool("BuildMode")
 end
