@@ -1,7 +1,8 @@
 function UlxBuild(calling_ply,num)
     ulx.fancyLogAdmin( calling_ply,"#A entered build mode")
     calling_ply:SetNWBool("BuildMode",num)
-    calling_ply:SetNoTarget(true)
+    calling_ply:SetNoTarget(num)
+    calling_ply:SetNWBool("PVE", false)
 end
 function ulx.build( calling_ply)
     local isBuild = calling_ply:GetNWBool("BuildMode")

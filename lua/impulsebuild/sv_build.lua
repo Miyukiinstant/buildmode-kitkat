@@ -3,46 +3,33 @@ end
 hook.Add("PlayerSpawn", "ImpulseBuildPlayerSpawn", ImpulseBuildPlayerSpawn)
 
 function ImpulseBuildEntityTakeDamage(ent, dmg)
-    if(ply:InSafeZone())then
+    if(!ent:IsPlayer() && ent:InSafeZone())then
         return true
     end
-    if(ent:GetNWBool("PVE"))then
-        return
+    if(dmg:GetAttacker():IsPlayer())then
+        if(dmg:GetAttacker():GetNWBool("BuildMode"))then
+            return true
+        end
     end
-    if(ent:GetNWBool("BuildMode") || dmg:GetAttacker():GetNWBool("BuildMode") || ply:InSafeZone())then --|| ply:InSafeZone()
-        return true
-    else
-        return false
-    end
+    
 end
 hook.Add("EntityTakeDamage", "ImpulseBuildEntityTakeDamage", ImpulseBuildEntityTakeDamage)
 
 function ImpulseBuildPlayerInitialSpawn(ply,transition)
     ply:SetNWBool("BuildMode", false)
+    ply:SetNWBool("PVE", false)
 end
 hook.Add("PlayerInitialSpawn", "ImpulseBuildPlayerInitialSpawn", ImpulseBuildPlayerInitialSpawn)
 
 function ImpulseBuildPlayerNoClip(ply, state)
-    if(ply:GetNWBool("PVE"))then
+    if(ply:GetNWBool("PVE") || !ply:GetNWBool("BuildMode"))then
         return false
     end
-        return ply:GetNWBool("BuildMode")
 end
 hook.Add("PlayerNoClip", "ImpulseBuildPlayerNoClip", ImpulseBuildPlayerNoClip)
---[[
-function ImpulseBuildPlayerSpawnedVehicle(ply, ent)
-    ent:SetNWBool("BuildMode", ply:GetNWBool("BuildMode"))
-end
-hook.Add("PlayerSpawnedVehicle", "ImpulseBuildPlayerSpawnedVehicle", ImpulseBuildPlayerSpawnedVehicle)
-]]
+
 function ImpulseBuildPlayerShouldTakeDamage(ply, attacker)
-    if(ply:InSafeZone())then
-        return false
-    end
-    if(attacker:GetNWBool("PVE"))then
-        return false
-    end
-    if(ply:GetNWBool("BuildMode") || ply:HasGodMode())then --|| ply:InSafeZone()
+    if(ply:InSafeZone() || attacker:GetNWBool("BuildMode") || attacker:GetNWBool("PVE") || ply:GetNWBool("BuildMode"))then
         return false
     else
         return true
